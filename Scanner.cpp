@@ -146,7 +146,7 @@ private:
 };
 
 int main() {
-    std::string source = "(P AND Q) S";
+    std::string source = "(P AND Q) IMPLIES OR S";
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.scanTokens();
 
