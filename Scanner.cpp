@@ -6,11 +6,11 @@
 #include <memory>
 #include <cctype>  // For isdigit(), isalpha(), etc.
 
+
 enum TokenType {
     // Single character tokens
     LEFT_PAREN,
     RIGHT_PAREN,
-
     // Literals (identifiers or variables)
     IDENTIFIER,
 
@@ -146,7 +146,7 @@ private:
 };
 
 int main() {
-    std::string source = "(P AND Q) IMPLIES OR A EQUIVALENT B";
+    std::string source = "(P AND Q) IMPLIES OR P EQUIVALENT Q";
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.scanTokens();
 
