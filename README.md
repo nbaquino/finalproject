@@ -1,4 +1,4 @@
-# Project Name
+# CMSC 124 - Design Implementation and Programming Languages 
 
 Brief description of your project goes here.
 
