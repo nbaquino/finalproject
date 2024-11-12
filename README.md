@@ -1,4 +1,4 @@
-# Project Name
+# CMSC 124 - Design Implementation and Programming Languages 
 
 A concise one-line description of your C++ project.
 
