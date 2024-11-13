@@ -7,8 +7,9 @@
 #include <cctype>  // For isdigit(), isalpha(), etc.
 
 
+
 enum TokenType {
-    // Single character tokens
+    // Single character
     LEFT_PAREN,
     RIGHT_PAREN,
     // Literals (identifiers or variables)
@@ -144,31 +145,3 @@ private:
         tokens.push_back(Token(type, lexeme, nullptr, line));
     }
 };
-
-int main() {
-    std::string source = "(P AND Q) IMPLIES OR P EQUIVALENT Q";
-    Scanner scanner(source);
-    std::vector<Token> tokens = scanner.scanTokens();
-
-    // Output the tokens
-    for (const Token& token : tokens) {
-        std::cout << "Token: " << token.lexeme << " (Type: ";
-        switch (token.type) {
-            case LEFT_PAREN: std::cout << "LEFT_PAREN"; break;
-            case RIGHT_PAREN: std::cout << "RIGHT_PAREN"; break;
-            case AND: std::cout << "AND"; break;
-            case TRUE: std::cout << "TRUE"; break;
-            case FALSE: std::cout << "FALSE"; break;
-            case NOT: std::cout << "NOT"; break;
-            case OR: std::cout << "OR"; break;
-            case IMPLIES: std::cout << "IMPLIES"; break;
-            case EQUIVALENT: std::cout << "EQUIVALENT"; break;
-            case IDENTIFIER: std::cout << "IDENTIFIER"; break;
-            case TOKENEOF: std::cout << "TOKENEOF"; break;
-            case UNKNOWN: std::cout << "UNKNOWN"; break;
-        }
-        std::cout << ")\n";
-    }
-
-    return 0;
-}
