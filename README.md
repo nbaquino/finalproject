@@ -6,9 +6,7 @@ A concise one-line description of your C++ project.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/yourproject.git
-# Build the project
-make
+git clone https://github.com/yourusername/yourproject.git](https://github.com/nbaquino/simple-interpreter.git)
 ```
 
 ## Contributing
