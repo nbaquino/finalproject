@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <Scanner.h>
 
 class Parser {
 private:
