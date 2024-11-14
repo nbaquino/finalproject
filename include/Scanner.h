@@ -24,6 +24,7 @@ private:
     char move();
     char peek() const;
     bool match(char expected);
+    char advance();
     void skipWhitespace();
     void scanToken();
     void addToken(TokenType type, const std::string& lexeme);

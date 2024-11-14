@@ -25,8 +25,8 @@ bool Scanner::isAtEnd() const {
     return current >= source.length();
 }
 
-// Move to the next character in the source and return it
-char Scanner::move() {
+// advance to the next character in the source and return it
+char Scanner::advance() {
     return source[current++];
 }
 
@@ -59,7 +59,7 @@ void Scanner::skipWhitespace() {
 void Scanner::scanToken() {
     skipWhitespace(); // Skip any leading whitespace
 
-    char c = move(); // Get the next character
+    char c = advance(); // Get the next character
 
     // Handle parentheses first - simplest case
     switch (c) {
@@ -75,7 +75,7 @@ void Scanner::scanToken() {
     if (isalpha(c)) {
         std::string identifier(1, c); // Start building the identifier
         while (isalpha(peek())) { // Continue if the next character is alphabetic
-            identifier += move(); // Add the character to the identifier
+            identifier += advance(); // Add the character to the identifier
         }
 
         // Check if it's a keyword first
