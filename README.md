@@ -6,9 +6,7 @@ A concise one-line description of your C++ project.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/yourproject.git
-# Build the project
-make
+git clone https://github.com/nbaquino/simple-interpreter.git
 ```
 
 ## Contributing
@@ -22,8 +20,8 @@ make
 ## Running the program
 - Check if you have g++ installed in your system by running `g++ --version`
 - If you don't have g++ installed, you can install it by running `sudo apt-get install g++`
-- For Windows, you can install g++ by downloading the MinGW-w64 installer from the internet or if you are using chocolatey, you can run `choco install mingw`
-- For Mac, you can install g++ by running `brew install gcc`
+  - For Windows, you can install g++ by downloading the MinGW-w64 installer from the internet or if you are using chocolatey, you can run `choco install mingw`
+  - For Mac, you can install g++ by running `brew install gcc`
 - Before compiling the program, make sure to navigate to the directory src by running `cd src`
-- To compile the program into executable, run in the terminal `g++ src/file -o name_you_want`
+- To compile the program into executable, run in the terminal `g++ (all the files needed) -o name_you_want`
 - To run the program, run in the terminal `./name_you_want`
