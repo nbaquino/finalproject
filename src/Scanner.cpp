@@ -22,21 +22,47 @@ Scanner::Scanner(const std::string& input_string) : input_string(input_string), 
 
 // Tokenizes the input string and checks for invalid tokens
 void Scanner::tokenize() {
-    std::istringstream iss(input_string);
-    std::string token_str;
+    size_t current = 0;
 
-    while (iss >> token_str) {  // This splits on whitespace
-        TokenType type = getTokenType(token_str);
-
-        if (type == TokenType::UNKNOWN) {
-            // Handle invalid token
-            size_t pos = input_string.find(token_str);
-            throw std::invalid_argument("There is an error at position " +
-                                      std::to_string(pos) +
-                                      ". Invalid token: '" + token_str + "'");
+    while (current < input_string.length()) {
+        // Skip whitespace
+        if (std::isspace(input_string[current])) {
+            if (input_string[current] == '\n') line++;
+            current++;
+            continue;
         }
 
-        tokens.push_back(createToken(type, token_str, line));
+        // Handle parentheses
+        if (input_string[current] == '(' || input_string[current] == ')') {
+            std::string lexeme(1, input_string[current]);
+            tokens.push_back(createToken(getTokenType(lexeme), lexeme, line));
+            current++;
+            continue;
+        }
+
+        // Handle identifiers and keywords
+        if (std::isalpha(input_string[current])) {
+            size_t start = current;
+            while (current < input_string.length() && std::isalpha(input_string[current])) {
+                current++;
+            }
+            std::string lexeme = input_string.substr(start, current - start);
+            TokenType type = getTokenType(lexeme);
+
+            if (type == TokenType::UNKNOWN) {
+                throw std::invalid_argument("There is an error at position " +
+                                          std::to_string(start) +
+                                          ". Invalid token: '" + lexeme + "'");
+            }
+
+            tokens.push_back(createToken(type, lexeme, line));
+            continue;
+        }
+
+        // If we get here, we've encountered an invalid character
+        throw std::invalid_argument("There is an error at position " +
+                                  std::to_string(current) +
+                                  ". Invalid character: '" + std::string(1, input_string[current]) + "'");
     }
 }
 
@@ -52,16 +78,19 @@ Token Scanner::createToken(TokenType type, const std::string& lexeme, int line) 
 
 // Add this new helper method
 TokenType Scanner::getTokenType(const std::string& lexeme) {
-    // Check if it's a keyword
+    // Handle parentheses
+    if (lexeme == "(") return TokenType::LEFT_PAREN;
+    if (lexeme == ")") return TokenType::RIGHT_PAREN;
+
+    // Check if it's a single-letter identifier (P or Q)
+    if (lexeme.length() == 1 && (lexeme[0] == 'P' || lexeme[0] == 'Q')) {
+        return TokenType::IDENTIFIER;
+    }
+
+    // Check keywords map
     auto it = keywords.find(lexeme);
     if (it != keywords.end()) {
         return it->second;
-    }
-
-    // Check if it's an identifier (P, Q, TRUE, or FALSE)
-    if ((lexeme.length() == 1 && (lexeme[0] == 'P' || lexeme[0] == 'Q')) ||
-        lexeme == "TRUE" || lexeme == "FALSE") {
-        return TokenType::IDENTIFIER;
     }
 
     return TokenType::UNKNOWN;

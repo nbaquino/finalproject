@@ -66,6 +66,8 @@ Evaluator::generateTruthTable() {
     std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>> table;
     std::set<std::string> allSubResults;
 
+    std::string fullExpression = nodeToString(root);
+
     size_t numCombinations = std::pow(2, variables.size());
     for (size_t i = 0; i < numCombinations; ++i) {
         std::unordered_map<std::string, bool> values;
@@ -75,7 +77,7 @@ Evaluator::generateTruthTable() {
 
         std::unordered_map<std::string, bool> subResults;
         bool result = evaluateWithTracking(root, values, subResults);
-        subResults["Result"] = result;
+        subResults[fullExpression] = result;
 
         table.emplace_back(values, subResults);
         for (const auto& [key, _] : subResults) {
@@ -85,7 +87,7 @@ Evaluator::generateTruthTable() {
 
     std::vector<std::string> intermediateColumns;
     for (const auto& col : allSubResults) {
-        if (col != "Result") {
+        if (col != fullExpression) {
             intermediateColumns.push_back(col);
         }
     }
@@ -98,14 +100,34 @@ Evaluator::generateTruthTable() {
 
     std::vector<std::string> finalColumns = variables;
     finalColumns.insert(finalColumns.end(), intermediateColumns.begin(), intermediateColumns.end());
-    finalColumns.push_back("Result");
+    finalColumns.push_back(fullExpression);
 
     return {table, finalColumns};
 }
 
 std::string Evaluator::nodeToString(Node* node) {
-    if (!node->children.empty()) {
-        return nodeToString(node->children[0]);
+    if (!node) return "";
+
+    if (node->children.empty()) {
+        return node->value;
     }
+
+    if (node->value == "NOT") {
+        return "NOT " + nodeToString(node->children[0]);
+    }
+
+    if (node->children.size() == 2) {
+        return "(" + nodeToString(node->children[0]) + " " + node->value + " " + nodeToString(node->children[1]) + ")";
+    }
+
     return node->value;
+}
+
+void print_tree(Node* node, int level = 0) {
+    if (node == nullptr) return;
+    std::cout << std::string(level * 2, ' ') << "Node: ";
+    std::cout << node->value << std::endl;  // Simplified for demonstration
+    for (auto child : node->children) {
+        print_tree(child, level + 1);
+    }
 }

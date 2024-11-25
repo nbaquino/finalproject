@@ -4,16 +4,6 @@
 #include "../include/Parser.h"
 #include "../include/Evaluator.h"
 
-// Add 'static' keyword to limit the scope to this file
-static void print_tree(Node* node, int level = 0) {
-    if (node == nullptr) return;
-    std::cout << std::string(level * 2, ' ') << "Node: ";
-    std::cout << node->value << std::endl;
-    for (auto child : node->children) {
-        print_tree(child, level + 1);
-    }
-}
-
 int main() {
     std::cout << "Propositional Logic Evaluator" << std::endl;
     std::cout << "Enter 'exit' or 'quit' to terminate the program." << std::endl;
