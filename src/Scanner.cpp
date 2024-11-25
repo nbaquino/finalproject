@@ -15,12 +15,18 @@ const std::unordered_map<std::string, TokenType> Scanner::keywords = {
     {")", TokenType::RIGHT_PAREN}
 };
 
-// Constructor that accepts the input string to be tokenized
+/**
+ * @brief Constructs a Scanner object to tokenize the input string
+ * @param input_string The logical expression to be tokenized
+ */
 Scanner::Scanner(const std::string& input_string) : input_string(input_string), line(1) {
     tokenize();
 }
 
-// Tokenizes the input string and checks for invalid tokens
+/**
+ * @brief Processes the input string and converts it into tokens
+ * @throws std::invalid_argument if an invalid token or character is encountered
+ */
 void Scanner::tokenize() {
     size_t current = 0;
 
@@ -66,17 +72,30 @@ void Scanner::tokenize() {
     }
 }
 
-// Returns the tokens extracted from the input string
+/**
+ * @brief Returns the vector of tokens generated from the input string
+ * @return std::vector<Token> The list of tokens
+ */
 std::vector<Token> Scanner::getTokens() const {
     return tokens;
 }
 
-// Helper method to create a Token from a matched string
+/**
+ * @brief Creates a new Token object with the given parameters
+ * @param type The TokenType of the token
+ * @param lexeme The string value of the token
+ * @param line The line number where the token appears
+ * @return Token The created token object
+ */
 Token Scanner::createToken(TokenType type, const std::string& lexeme, int line) {
     return Token(type, lexeme, nullptr, line); // For simplicity, we pass nullptr as the literal value
 }
 
-// Add this new helper method
+/**
+ * @brief Determines the TokenType for a given lexeme
+ * @param lexeme The string to be classified
+ * @return TokenType The type of the token (UNKNOWN if not recognized)
+ */
 TokenType Scanner::getTokenType(const std::string& lexeme) {
     // Handle parentheses
     if (lexeme == "(") return TokenType::LEFT_PAREN;

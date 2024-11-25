@@ -5,7 +5,12 @@
 #include "../include/Evaluator.h"
 #include <fstream>
 
-
+/**
+ * @brief Reads and filters lines from an input file
+ * @param filename Path to the input file
+ * @return Vector of non-empty, non-comment lines
+ * @throws std::runtime_error if file cannot be opened
+ */
 static std::vector<std::string> read_input_file(const std::string& filename) {
     std::vector<std::string> lines;
     std::ifstream file(filename);
@@ -26,7 +31,15 @@ static std::vector<std::string> read_input_file(const std::string& filename) {
     return lines;
 }
 
-// Add this function to process a single expression
+/**
+ * @brief Processes a single logical expression
+ * @param input_string The logical expression to evaluate
+ *
+ * Steps:
+ * 1. Tokenizes the input
+ * 2. Builds parse tree
+ * 3. Generates and displays truth table
+ */
 static void process_expression(const std::string& input_string) {
     try {
         // Step 1: Tokenize the input string
@@ -71,6 +84,16 @@ static void process_expression(const std::string& input_string) {
     }
 }
 
+/**
+ * @brief Main entry point of the Propositional Logic Evaluator
+ * @param argc Number of command-line arguments
+ * @param argv Array of command-line arguments
+ * @return 0 on success, 1 on error
+ *
+ * Supports two modes:
+ * 1. File input mode: ./program input_file
+ * 2. Interactive mode: ./program
+ */
 int main(int argc, char* argv[]) {
     if (argc > 2) {
         std::cout << "Usage: " << argv[0] << " [input_file]" << std::endl;

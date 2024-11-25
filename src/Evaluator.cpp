@@ -3,10 +3,21 @@
 #include <cmath>
 #include "../include/Evaluator.h"
 
+/**
+ * @brief Constructs an Evaluator with a given syntax tree root
+ * @param root Pointer to the root node of the syntax tree
+ */
 Evaluator::Evaluator(Node* root) {
     this->root = root;
 }
 
+/**
+ * @brief Evaluates a logical expression while tracking intermediate results
+ * @param node Current node in the syntax tree
+ * @param values Map of variable assignments
+ * @param subResults Map to store intermediate evaluation results
+ * @return Boolean result of the evaluation
+ */
 bool Evaluator::evaluateWithTracking(Node* node, const std::unordered_map<std::string, bool>& values,
                                      std::unordered_map<std::string, bool>& subResults) {
     if (node->value == "TRUE") {
@@ -41,6 +52,11 @@ bool Evaluator::evaluateWithTracking(Node* node, const std::unordered_map<std::s
     }
 }
 
+/**
+ * @brief Collects all variables in the expression tree
+ * @param node Current node in the syntax tree
+ * @return Set of variable names found in the tree
+ */
 std::set<std::string> Evaluator::collectVariables(Node* node) {
     std::set<std::string> variables;
     if (!node) return variables;
@@ -57,6 +73,10 @@ std::set<std::string> Evaluator::collectVariables(Node* node) {
     return variables;
 }
 
+/**
+ * @brief Generates a complete truth table for the logical expression
+ * @return Pair containing the truth table data and column headers
+ */
 std::pair<std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>>,
           std::vector<std::string>>
 Evaluator::generateTruthTable() {
@@ -105,6 +125,11 @@ Evaluator::generateTruthTable() {
     return {table, finalColumns};
 }
 
+/**
+ * @brief Converts a node and its subtree to a string representation
+ * @param node Current node in the syntax tree
+ * @return String representation of the logical expression
+ */
 std::string Evaluator::nodeToString(Node* node) {
     if (!node) return "";
 
@@ -123,6 +148,11 @@ std::string Evaluator::nodeToString(Node* node) {
     return node->value;
 }
 
+/**
+ * @brief Prints the syntax tree in a hierarchical format
+ * @param node Current node in the syntax tree
+ * @param level Current depth in the tree for indentation
+ */
 void print_tree(Node* node, int level) {
     if (node == nullptr) return;
     std::cout << std::string(level * 2, ' ') << "Node: ";
