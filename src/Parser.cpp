@@ -2,8 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept>
-#include "Scanner.h"
-#include "Parser.h"
+#include "../include/Parser.h"
 
 // Add this at the top level of the file (outside any function)
 std::unordered_map<std::string, bool> AtomicSentence::booleanValues;
@@ -12,12 +11,17 @@ std::unordered_map<std::string, bool> AtomicSentence::booleanValues;
 AtomicSentence::AtomicSentence(const std::string& identifier) : identifier(identifier) {}
 
 bool AtomicSentence::evaluate() const {
+    // Special handling for TRUE and FALSE literals
+    if (identifier == "TRUE") return true;
+    if (identifier == "FALSE") return false;
+
+    // Existing logic for other identifiers
     auto it = booleanValues.find(identifier);
     if (it != booleanValues.end()) {
         return it->second;
     }
     std::cerr << "Warning: Undefined identifier '" << identifier << "' used in evaluation." << std::endl;
-    return false; // Or throw a more detailed error
+    return false;
 }
 
 void AtomicSentence::print(int indent) const {
@@ -116,9 +120,11 @@ Node* Parser::parseTerm() {
         throw std::runtime_error("Unexpected end of input.");
     }
     const Token& token = tokens[current];
-    if (token.type == TokenType::IDENTIFIER) {
+    if (token.type == TokenType::IDENTIFIER ||
+        token.lexeme == "TRUE" ||
+        token.lexeme == "FALSE") {
         ++current;
-        return new Node(token.lexeme);  // Create a Node for the identifier
+        return new Node(token.lexeme);
     } else if (token.type == TokenType::NOT) {
         ++current;
         Node* inner = parseTerm();

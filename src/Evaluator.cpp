@@ -1,7 +1,7 @@
-#include "Evaluator.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include "../include/Evaluator.h"
 
 Evaluator::Evaluator(Node* root) {
     this->root = root;
@@ -41,9 +41,28 @@ bool Evaluator::evaluateWithTracking(Node* node, const std::unordered_map<std::s
     }
 }
 
+std::set<std::string> Evaluator::collectVariables(Node* node) {
+    std::set<std::string> variables;
+    if (!node) return variables;
+
+    if (node->value.length() == 1 && std::isupper(node->value[0])) {
+        variables.insert(node->value);
+    }
+
+    for (auto child : node->children) {
+        auto childVars = collectVariables(child);
+        variables.insert(childVars.begin(), childVars.end());
+    }
+
+    return variables;
+}
+
 std::pair<std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>>,
           std::vector<std::string>>
-Evaluator::generateTruthTable(const std::vector<std::string>& variables) {
+Evaluator::generateTruthTable() {
+    std::set<std::string> variableSet = collectVariables(root);
+    std::vector<std::string> variables(variableSet.begin(), variableSet.end());
+
     std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>> table;
     std::set<std::string> allSubResults;
 

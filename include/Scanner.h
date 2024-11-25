@@ -6,6 +6,7 @@
 #include <string>
 #include <regex>
 #include <stdexcept>
+#include <unordered_map>
 
 class Scanner {
 public:
@@ -31,6 +32,9 @@ private:
 
     // Helper method to create a Token from a matched string
     Token createToken(TokenType type, const std::string& lexeme, int line);
+
+    static const std::unordered_map<std::string, TokenType> keywords;
+    TokenType getTokenType(const std::string& lexeme);
 };
 
 #endif // SCANNER_H

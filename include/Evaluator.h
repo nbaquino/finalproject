@@ -19,8 +19,11 @@ public:
                               std::unordered_map<std::string, bool>& subResults);
 
     // Function to generate a truth table for the logical expression
-    std::pair<std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>> ,
-              std::vector<std::string>> generateTruthTable(const std::vector<std::string>& variables);
+    std::pair<std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>>,
+              std::vector<std::string>> generateTruthTable();
+
+    // Add this new method declaration to the Evaluator class
+    std::set<std::string> collectVariables(Node* node);
 
 private:
     // Helper function to convert a node to its string representation

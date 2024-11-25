@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
-#include "Scanner.h"
-#include "Parser.h"
-#include "Evaluator.h"
+#include "../include/Evaluator.h"
+#include "../include/Parser.h"
+#include "../include/Evaluator.h"
 
 // Assuming Node is now used instead of ParseTreeNode
 void print_tree(Node* node, int level = 0) {
@@ -48,9 +48,8 @@ int main() {
 
 
             // Step 3: Generate the truth table
-            std::vector<std::string> variables = {"P", "Q"};
             Evaluator evaluator(parse_tree);
-            auto [table, finalColumns] = evaluator.generateTruthTable(variables);  
+            auto [table, finalColumns] = evaluator.generateTruthTable();
 
             // Step 4: Print the truth table
             std::cout << "Truth Table: \n";
