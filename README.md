@@ -211,31 +211,19 @@ Error processing 'P AND AND Q': There is an error at position 6. Unexpected toke
 ```
 
 ## Contributing
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Push to the branch (`git push origin feature/improvement`)
-5. Open a Pull Request
+- Fork the repository
+- Create a new branch (`git checkout -b feature/improvement`)
+- Make your changes
+- Push to the branch (`git push origin feature/improvement`)
+- Open a Pull Request
 
-## License
-MIT License
 
-Copyright (c) 2024 Nathan Aquino
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Running the program
+- Check if you have g++ installed in your system by running `g++ --version`
+- If you don't have g++ installed, you can install it by running `sudo apt-get install g++`
+  - For Windows, you can install g++ by downloading the MinGW-w64 installer from the internet or if you are using chocolatey, you can run `choco install mingw`
+  - For Mac, you can install g++ by running `brew install gcc`
+- Before compiling the program, make sure to navigate to the directory src by running `cd src`
+- To compile the program into executable, run in the terminal `g++ -o  LOGIC .\Logic.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp`
+- To run the program, run in the terminal `./LOGIC.exe`
+- In this case, since the program is already compiled, you can directly run the program by running `./LOGIC.exe`
