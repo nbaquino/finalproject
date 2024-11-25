@@ -25,6 +25,9 @@ public:
     // Add this new method declaration to the Evaluator class
     std::set<std::string> collectVariables(Node* node);
 
+    // Add this function declaration in the header file
+    void print_tree(Node* node, int level = 0);
+
 private:
     // Helper function to convert a node to its string representation
     std::string nodeToString(Node* node);
@@ -32,5 +35,8 @@ private:
     // Root node of the parse tree
     Node* root;
 };
+
+// Add this declaration before the closing bracket of the header file
+void print_tree(Node* node, int level = 0);
 
 #endif // EVALUATOR_H

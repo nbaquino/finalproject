@@ -23,17 +23,11 @@ int main() {
             // Step 1: Tokenize the input string
             Scanner scanner(input_string);
             std::vector<Token> tokens = scanner.getTokens();
-            std::cout << "Scanned Tokens: ";
-            for (const auto& token : tokens) {
-                std::cout << token.lexeme << " ";
-            }
-            std::cout << std::endl;
+
 
             // Step 2: Parse the tokens into a parse tree
             Parser parser(tokens);
             Node* parse_tree = parser.parseSentence();  // Updated to use Node*
-            std::cout << "Parse Tree Structure: " << std::endl;
-            print_tree(parse_tree);
 
 
             // Step 3: Generate the truth table

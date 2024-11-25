@@ -123,7 +123,7 @@ std::string Evaluator::nodeToString(Node* node) {
     return node->value;
 }
 
-void print_tree(Node* node, int level = 0) {
+void print_tree(Node* node, int level) {
     if (node == nullptr) return;
     std::cout << std::string(level * 2, ' ') << "Node: ";
     std::cout << node->value << std::endl;  // Simplified for demonstration
