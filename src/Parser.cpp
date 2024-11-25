@@ -1,45 +1,142 @@
 #include <iostream>
 #include <vector>
-#include "../include/Scanner.h"
+#include <unordered_map>
+#include <stdexcept>
+#include "Scanner.h"
+#include "Parser.h"
 
-//Class for Sentence
+// Add this at the top level of the file (outside any function)
+std::unordered_map<std::string, bool> AtomicSentence::booleanValues;
 
+// AtomicSentence - Leaf node for atomic values
+AtomicSentence::AtomicSentence(const std::string& identifier) : identifier(identifier) {}
 
-//Class for Atomic Sentence
-
-
-//Class for Complex Sentence
-
-
-//Class for Negated Sentence
-
-
-class Parser {
-private:
-    const std::vector<Token>& tokens;
-    int current = 0;
-
-public:
-    /*
-     * Constructor for the Parser class
-     * @param tokens
-     * The vector of tokens to be parsed
-     */
-    Parser(const std::vector<Token>& tokens) : tokens(tokens) {}
-
-    /*
-     * Checks if the current token matches the given type and advances if it does
-     * @param type
-     * The token type to match against
-     * @return
-     * True if the current token matches the given type (and advances), false otherwise
-     */
-    bool match(TokenType type) {
-        if (current >= tokens.size()) return false;  // This check is important to prevent accessing tokens out of bounds
-        if (tokens[current].type == type) {
-            current++;
-            return true;
-        }
-        return false;
+bool AtomicSentence::evaluate() const {
+    auto it = booleanValues.find(identifier);
+    if (it != booleanValues.end()) {
+        return it->second;
     }
-};
+    std::cerr << "Warning: Undefined identifier '" << identifier << "' used in evaluation." << std::endl;
+    return false; // Or throw a more detailed error
+}
+
+void AtomicSentence::print(int indent) const {
+    std::cout << std::string(indent, ' ') << "AtomicSentence (" << identifier << ")\n";
+}
+
+void AtomicSentence::setBooleanValue(const std::string& id, bool value) {
+    booleanValues[id] = value;
+}
+
+// ComplexSentence - Node for binary operations
+ComplexSentence::ComplexSentence(ParseTreeNode* left, TokenType connective, ParseTreeNode* right)
+    : left(left), connective(connective), right(right) {}
+
+ComplexSentence::~ComplexSentence() {
+    delete left;
+    delete right;
+}
+
+bool ComplexSentence::evaluate() const {
+    if (!left || !right) {
+        throw std::runtime_error("Invalid operands for connective.");
+    }
+    switch (connective) {
+        case TokenType::AND:
+            return left->evaluate() && right->evaluate();
+        case TokenType::OR:
+            return left->evaluate() || right->evaluate();
+        case TokenType::IMPLIES:
+            return !left->evaluate() || right->evaluate();
+        case TokenType::EQUIVALENT:
+            return left->evaluate() == right->evaluate();
+        default:
+            throw std::runtime_error("Unknown connective.");
+    }
+}
+
+void ComplexSentence::print(int indent) const {
+    std::cout << std::string(indent, ' ') << "ComplexSentence (" << static_cast<int>(connective) << ")\n";
+    if (left) left->print(indent + 2);
+    if (right) right->print(indent + 2);
+}
+
+// NegatedSentence - Node for unary NOT operation
+NegatedSentence::NegatedSentence(ParseTreeNode* innerSentence) : innerSentence(innerSentence) {}
+
+NegatedSentence::~NegatedSentence() {
+    delete innerSentence;
+}
+
+bool NegatedSentence::evaluate() const {
+    if (!innerSentence) {
+        throw std::runtime_error("Invalid operand for NOT.");
+    }
+    return !innerSentence->evaluate();
+}
+
+void NegatedSentence::print(int indent) const {
+    std::cout << std::string(indent, ' ') << "NegatedSentence\n";
+    if (innerSentence) innerSentence->print(indent + 2);
+}
+
+// Parser class - Parsing logic
+Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
+
+Node* Parser::parseSentence() {
+    Node* left = parseTerm();
+    while (current < tokens.size()) {
+        const Token& token = tokens[current];
+        if (token.type == TokenType::AND || token.type == TokenType::OR ||
+            token.type == TokenType::IMPLIES || token.type == TokenType::EQUIVALENT) {
+            TokenType connective = token.type;
+            ++current;
+            Node* right = parseTerm();
+            if (!right) {
+                throw std::runtime_error("Missing second operand after operator.");
+            }
+            Node* parent = new Node(token.lexeme);  // Create a new Node for the connective
+            parent->children.push_back(left);
+            parent->children.push_back(right);
+            left = parent;
+        } else {
+            break;  // Or handle other token types as needed
+        }
+    }
+    return left;
+}
+
+bool Parser::isConnective(TokenType type) {
+    return type == TokenType::AND || type == TokenType::OR ||
+           type == TokenType::IMPLIES || type == TokenType::EQUIVALENT;
+}
+
+Node* Parser::parseTerm() {
+    if (current >= tokens.size()) {
+        throw std::runtime_error("Unexpected end of input.");
+    }
+    const Token& token = tokens[current];
+    if (token.type == TokenType::IDENTIFIER) {
+        ++current;
+        return new Node(token.lexeme);  // Create a Node for the identifier
+    } else if (token.type == TokenType::NOT) {
+        ++current;
+        Node* inner = parseTerm();
+        if (!inner) {
+            throw std::runtime_error("NOT operator missing operand.");
+        }
+        Node* notNode = new Node("NOT");
+        notNode->children.push_back(inner);
+        return notNode;
+    } else if (token.type == TokenType::LEFT_PAREN) {
+        ++current;
+        Node* expr = parseSentence();
+        if (current >= tokens.size() || tokens[current].type != TokenType::RIGHT_PAREN) {
+            throw std::runtime_error("Expected closing parenthesis.");
+        }
+        ++current;  // Consume ')'
+        return expr;
+    } else {
+        throw std::runtime_error("Unexpected token '" + token.lexeme + "' encountered.");
+    }
+}

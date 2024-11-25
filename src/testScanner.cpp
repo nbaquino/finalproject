@@ -14,7 +14,7 @@ void printTokens(const std::vector<Token>& tokens) {
 int main() {
     // Test input strings
     std::vector<std::string> testInputs = {
-        "P OR A"
+        "P Or A"
     };
 
     // Iterate over each test input

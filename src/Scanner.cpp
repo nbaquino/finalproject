@@ -1,134 +1,93 @@
-#include "../include/Scanner.h"
-#include <cctype>
-#include <unordered_map>
-#include <unordered_set>
+#include "Scanner.h"
+#include "Token.h"  // Include the Token header to use the Token class
 
-// Constructor for the Scanner class, initializes the source string
-/*
- * @param source
- * The string to be scanned
- */
-Scanner::Scanner(const std::string& source) : source(source) {}
-
-// Main function to scan the source and return a list of tokens
-/*
- * @return
- * A vector of tokens parsed from the source
- */
-std::vector<Token> Scanner::scanTokens() {
-    while (!isAtEnd()) {
-        start = current;
-        scanToken();
-    }
-    tokens.push_back(Token(TokenType::TOKENEOF, "", nullptr, line));
-    return tokens;
+// Constructor that accepts the input string to be tokenized
+Scanner::Scanner(const std::string& input_string) : input_string(input_string), line(1) {
+    tokenize();
 }
 
-// Tokenizes the entire source code. This function is similar to scanTokens but kept separate for specific reasons.
-/*
- * @return
- * A vector of tokens representing the entire source code
- */
-std::vector<Token> Scanner::tokenize() {
-    while (current < source.length()) {
-        start = current;
-        scanToken();
-    }
-    addToken(TokenType::TOKENEOF, "");
-    return tokens;
-}
+// Tokenizes the input string and checks for invalid tokens
+void Scanner::tokenize() {
+    std::regex token_regex("(TRUE|FALSE|P|Q|S|NOT|AND|OR|IMPLIES|EQUIVALENT|\\(|\\))");
+    std::sregex_token_iterator iter(input_string.begin(), input_string.end(), token_regex);
+    std::sregex_token_iterator end;
 
-// Check if the scanner has reached the end of the source
-/*
- * @return
- * True if the end of the source has been reached, false otherwise
- */
-bool Scanner::isAtEnd() const {
-    return current >= source.length();
-}
+    while (iter != end) {
+        std::string token_str = iter->str();
+        TokenType type = TokenType::UNKNOWN;
 
-// Advance to the next character in the source and return it
-/*
- * @return
- * The next character in the source
- */
-char Scanner::advance() {
-    return source[current++];
-}
-
-// Peek at the current character without consuming it
-/*
- * @return
- * The current character in the source without advancing the scanner
- */
-char Scanner::peek() const {
-    if (isAtEnd()) return '\0';
-    return source[current];
-}
-
-// Match the current character with the expected one and advance if it matches
-/*
- * @param expected
- * The character expected to match the current character in the source
- * @return
- * True if the current character matches the expected character, false otherwise
- */
-bool Scanner::match(char expected) {
-    if (isAtEnd() || source[current] != expected) return false;
-    current++;
-    return true;
-}
-
-// Initialize the set of valid identifiers
-std::unordered_set<std::string> validIds = {"P", "Q"};
-
-// Skip whitespace characters and handle new lines
-void Scanner::skipWhitespace() {
-    while (std::isspace(source[current])) {
-        if (source[current] == '\n') line++;
-        current++;
-    }
-}
-
-// Scan the next token from the source
-void Scanner::scanToken() {
-    skipWhitespace();
-    char c = advance();
-    switch (c) {
-        case '(': addToken(TokenType::LEFT_PAREN, "("); return;
-        case ')': addToken(TokenType::RIGHT_PAREN, ")"); return;
-    }
-    if (isalpha(c)) {
-        std::string identifier(1, c);
-        while (isalpha(peek())) identifier += advance();
-        static const std::unordered_map<std::string, TokenType> keywords = {
-            {"AND", TokenType::AND},
-            {"TRUE", TokenType::TRUE},
-            {"FALSE", TokenType::FALSE},
-            {"NOT", TokenType::NOT},
-            {"OR", TokenType::OR},
-            {"IMPLIES", TokenType::IMPLIES},
-            {"EQUIVALENT", TokenType::EQUIVALENT}
-        };
-        if (auto it = keywords.find(identifier); it != keywords.end()) {
-            addToken(it->second, identifier);
-        } else if (validIds.find(identifier) != validIds.end()) {
-            addToken(TokenType::IDENTIFIER, identifier);
-        } else {
-            addToken(TokenType::UNKNOWN, identifier);
+        // Match token type based on the lexeme
+        if (token_str == "TRUE") {
+            type = TokenType::TRUE;
+        } else if (token_str == "FALSE") {
+            type = TokenType::FALSE;
+        } else if (token_str == "P" || token_str == "Q" || token_str == "S") {
+            type = TokenType::IDENTIFIER;
+        } else if (token_str == "NOT") {
+            type = TokenType::NOT;
+        } else if (token_str == "AND") {
+            type = TokenType::AND;
+        } else if (token_str == "OR") {
+            type = TokenType::OR;
+        } else if (token_str == "IMPLIES") {
+            type = TokenType::IMPLIES;
+        } else if (token_str == "EQUIVALENT") {
+            type = TokenType::EQUIVALENT;
+        } else if (token_str == "(") {
+            type = TokenType::LEFT_PAREN;
+        } else if (token_str == ")") {
+            type = TokenType::RIGHT_PAREN;
         }
-        return;
+
+        // Create a Token object and add it to the tokens list
+        tokens.push_back(createToken(type, token_str, line));
+
+        ++iter;
     }
-    addToken(TokenType::UNKNOWN, std::string(1, c));
+
+    // Remove spaces to compare cleaned input
+    std::string cleaned_input;
+    for (const auto& token : tokens) {
+        cleaned_input += token.lexeme;
+    }
+
+    // Check for invalid tokens
+    if (cleaned_input != removeSpaces(input_string)) {
+        size_t invalid_index = findInvalidPosition(cleaned_input);
+        throw std::invalid_argument("There is a typographical error at position " +
+                                    std::to_string(invalid_index) +
+                                    ". Invalid token: '" + input_string.substr(invalid_index, 1) + "'");
+    }
 }
 
-// Adds a token to the list of tokens with the given type and lexeme
-/*
- * @param type
- * The type of the token to add
- * @param lexeme
- * The lexeme of the token to add
- */
-void Scanner::addToken(TokenType type, const std::string& lexeme) {
-    tokens.push_back(Token(type, lexeme, nullptr, line));
+// Returns the tokens extracted from the input string
+std::vector<Token> Scanner::getTokens() const {
+    return tokens;
+}
+
+// Helper method to remove spaces from a string
+std::string Scanner::removeSpaces(const std::string& str) {
+    std::string result;
+    for (char ch : str) {
+        if (!std::isspace(ch)) {
+            result += ch;
+        }
+    }
+    return result;
+}
+
+// Helper method to find the position of the invalid token
+size_t Scanner::findInvalidPosition(const std::string& cleaned_input) {
+    size_t i = 0;
+    for ( ; i < cleaned_input.size() && i < input_string.size(); ++i) {
+        if (input_string[i] != cleaned_input[i]) {
+            return i;
+        }
+    }
+    return i;
+}
+
+// Helper method to create a Token from a matched string
+Token Scanner::createToken(TokenType type, const std::string& lexeme, int line) {
+    return Token(type, lexeme, nullptr, line); // For simplicity, we pass nullptr as the literal value
 }

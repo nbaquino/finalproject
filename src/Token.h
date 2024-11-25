@@ -21,7 +21,7 @@ enum class TokenType {
  */
 class Token {
 public:
-    const TokenType type; /**< Type of the token. */    
+    const TokenType type; /**< Type of the token. */
     const std::string lexeme; /**< Lexeme of the token. */
     const std::shared_ptr<void> literal; /**< Optional literal value of the token. */
     int line; /**< Line number where the token was found. */
