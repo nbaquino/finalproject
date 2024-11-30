@@ -57,7 +57,6 @@ cd propositional-logic-interpreter/src
 
 2. Install Homebrew (skip if already installed):
 ```bash
-=======
 # Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
