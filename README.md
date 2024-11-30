@@ -67,7 +67,7 @@ cd simple-interpreter
 ```
 
 ## Building the Program
-Skip this step since if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
+Skip this step if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
 ### Windows
 ```bash
 cd src
