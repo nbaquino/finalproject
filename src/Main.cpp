@@ -107,15 +107,15 @@ int main(int argc, char* argv[]) {
         }
     } else {
         // Interactive mode
-        std::cout << "Propositional Logic Evaluator" << std::endl;
-        std::cout << "Enter 'exit' or 'quit' to terminate the program." << std::endl;
+        std::cout << "CMSC 124 - Propositional Logic Evaluator" << std::endl;
+        std::cout << "Enter 'exit' to terminate the program." << std::endl;
 
         while (true) {
-            std::cout << "\nEnter a propositional logic statement: ";
+            std::cout << "\nEnter a propositional logic: ";
             std::string input_string;
             std::getline(std::cin, input_string);
 
-            if (input_string == "exit" || input_string == "quit") {
+            if (input_string == "exit") {
                 std::cout << "Program terminated." << std::endl;
                 break;
             }
