@@ -67,7 +67,6 @@ cd simple-interpreter
 ```
 
 ## Building the Program
-Skip this step if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
 ### Windows
 ```bash
 cd src
@@ -78,7 +77,6 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```bash
 cd src
 g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
-# If the above command fails
 ```
 
 ## Usage
