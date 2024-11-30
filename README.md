@@ -155,12 +155,25 @@ Enter a propositional logic statement: exit
 ```
 
 ### File Input Mode
-Create a file named `input.txt` with the following content:
+Create a file named `input.txt` with the following content. In this case, we have sentence.pl which contains:
 ```text
 # Sample expressions
+P
+Q
+TRUE
+FALSE
+NOT P
+NOT Q
 P AND Q
-P OR (Q AND R)
-NOT (P AND Q)
+P OR Q
+P IMPLIES Q
+P EQUIVALENT Q
+(P AND Q) IMPLIES R
+(P OR Q) EQUIVALENT R
+(P IMPLIES Q) AND (Q IMPLIES P)
+(P EQUIVALENT Q) OR (NOT P AND NOT Q)
+NOT NOT (P EQUIVALENT Q) OR (P IMPLIES Q)
+
 ```
 
 Run the program:
@@ -191,6 +204,9 @@ F       F       T
 T       F       T
 F       T       T
 T       T       F
+
+
+...etc
 ```
 
 ### Error Handling
