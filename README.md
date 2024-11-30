@@ -54,7 +54,10 @@ The Evaluator processes the AST to:
   - **Windows**: MinGW-w64 or Visual Studio with C++ support
   - **macOS**: Xcode Command Line Tools or Homebrew's GCC
   - **Linux**: GCC/G++
-
+- To check if you have gcc installed in you device, please run this in your terminal
+```
+gcc -version
+```
 ## Installation
 
 ```bash
