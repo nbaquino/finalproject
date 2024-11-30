@@ -54,7 +54,10 @@ The Evaluator processes the AST to:
   - **Windows**: MinGW-w64 or Visual Studio with C++ support
   - **macOS**: Xcode Command Line Tools or Homebrew's GCC
   - **Linux**: GCC/G++
-
+- To check if you have gcc installed in you device, please run this in your terminal
+```
+gcc -version
+```
 ## Installation
 
 ```bash
@@ -64,7 +67,7 @@ cd simple-interpreter
 ```
 
 ## Building the Program
-
+Skip this step if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
 ### Windows
 ```bash
 cd src
@@ -92,6 +95,7 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 .\LOGIC.exe
 
 # macOS/Linux
+chmod +x LOGIC.exe
 ./LOGIC
 ```
 
@@ -256,14 +260,3 @@ All errors are caught and handled gracefully, allowing the program to:
 - Make your changes
 - Push to the branch (`git push origin feature/improvement`)
 - Open a Pull Request
-
-
-## Running the program
-- Check if you have g++ installed in your system by running `g++ --version`
-- If you don't have g++ installed, you can install it by running `sudo apt-get install g++`
-  - For Windows, you can install g++ by downloading the MinGW-w64 installer from the internet or if you are using chocolatey, you can run `choco install mingw`
-  - For Mac, you can install g++ by running `brew install gcc`
-- Before compiling the program, make sure to navigate to the directory src by running `cd src`
-- To compile the program into executable, run in the terminal `g++ -o  LOGIC .\Logic.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp`
-- To run the program, run in the terminal `./LOGIC.exe`
-- In this case, since the program is already compiled, you can directly run the program by running `./LOGIC.exe`
