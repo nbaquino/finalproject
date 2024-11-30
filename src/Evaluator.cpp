@@ -22,10 +22,21 @@ bool Evaluator::evaluateWithTracking(Node* node, const std::unordered_map<std::s
         throw std::runtime_error("Invalid expression: Empty node encountered");
     }
 
-    // Handle constants and variables
-    if (node->value == "TRUE") return true;
-    if (node->value == "FALSE") return false;
-    if (values.count(node->value)) return values.at(node->value);
+    // Handle constants
+    if (node->value == "TRUE") {
+        subResults[node->value] = true;  // Store the result for TRUE
+        return true;
+    }
+    if (node->value == "FALSE") {
+        subResults[node->value] = false;  // Store the result for FALSE
+        return false;
+    }
+
+    // Handle variables
+    if (values.count(node->value)) {
+        subResults[node->value] = values.at(node->value);  // Store the variable value
+        return values.at(node->value);
+    }
 
     // Get result first
     bool result;
@@ -88,6 +99,7 @@ Evaluator::generateTruthTable() {
     try {
         std::set<std::string> variableSet = collectVariables(root);
         std::vector<std::string> variables(variableSet.begin(), variableSet.end());
+        std::sort(variables.begin(), variables.end());  // Sort variables alphabetically
         std::string fullExpression = nodeToString(root);
 
         // Generate truth table
@@ -103,13 +115,23 @@ Evaluator::generateTruthTable() {
         std::unordered_map<std::string, bool> firstResults;
         evaluateWithTracking(root, firstValues, firstResults);
 
-        // Collect unique subexpressions in order
+        // Order subexpressions based on complexity
+        auto orderSubExpressions = [](const std::string& a, const std::string& b) {
+            // Count spaces as a measure of expression complexity
+            int complexityA = std::count(a.begin(), a.end(), ' ');
+            int complexityB = std::count(b.begin(), b.end(), ' ');
+            if (complexityA != complexityB) return complexityA < complexityB;
+            return a < b;
+        };
+
+        // Collect and order subexpressions
         for (const auto& [expr, _] : firstResults) {
             if (expr != fullExpression &&
                 std::find(variables.begin(), variables.end(), expr) == variables.end()) {
                 subExpressions.push_back(expr);
             }
         }
+        std::sort(subExpressions.begin(), subExpressions.end(), orderSubExpressions);
 
         // Generate all combinations
         size_t numCombinations = std::pow(2, variables.size());

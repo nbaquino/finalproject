@@ -52,15 +52,11 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 
 1. Navigate to the source directory:
 ```bash
-<<<<<<< HEAD
 cd propositional-logic-interpreter/src
 ```
 
 2. Install Homebrew (skip if already installed):
 ```bash
-=======
-# Install Homebrew if not already installed
->>>>>>> 58bcf7235ca8c42ac0a6d863dc6ba66558403692
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
