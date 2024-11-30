@@ -68,17 +68,20 @@ cd simple-interpreter
 ### Windows
 ```bash
 cd src
-g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
+g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ### macOS/Linux
 ```bash
 cd src
-g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
+g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 # Make the executable runnable (macOS/Linux only)
-chmod +x LOGIC
-# If the above command fails, you can try using clang++ instead of g++
-g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
+chmod +x ./LOGIC #or
+chmod +x LOGIC   #or
+chmod +x .\LOGIC #or
+chmod +x ./LOGIC.exe
+# If the above command fails
+g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ## Usage
