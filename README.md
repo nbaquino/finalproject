@@ -49,22 +49,41 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ### macOS
+
+1. Navigate to the source directory:
 ```bash
 cd propositional-logic-interpreter/src
-# Install Homebrew if not already installed
+```
+
+2. Install Homebrew (skip if already installed):
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# Install LLVM
+```
+
+3. Install LLVM using Homebrew:
+```bash
 brew install llvm
-# Add LLVM to your PATH and set compiler variables
+```
+
+4. Configure environment variables:
+```bash
 echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
 echo 'export CC="/opt/homebrew/opt/llvm/bin/clang"' >> ~/.zshrc
 echo 'export CXX="/opt/homebrew/opt/llvm/bin/clang++"' >> ~/.zshrc
 source ~/.zshrc
-# Compile the program
+```
+
+5. Compile the program:
+```bash
 clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
-# Run the program (with input file)
+```
+
+6. Run the program:
+```bash
+# With input file
 ./LOGIC sentence.pl
-# Or run in interactive mode
+
+# Or in interactive mode
 ./LOGIC
 ```
 
