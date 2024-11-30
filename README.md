@@ -82,15 +82,6 @@ source ~/.zshrc
 clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
 ```
 
-6. Run the program:
-```bash
-# With input file
-./LOGIC sentence.pl
-
-# Or in interactive mode
-./LOGIC
-```
-
 ### Linux
 ```bash
 cd src
