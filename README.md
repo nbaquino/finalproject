@@ -95,10 +95,10 @@ g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
 ### File Input Mode
 ```bash
 # Windows
-.\LOGIC.exe input_file.txt
+.\LOGIC.exe sentence.pl
 
 # macOS/Linux
-./LOGIC input_file.txt
+./LOGIC sentence.pl
 ```
 
 ### Input Format
@@ -125,7 +125,7 @@ Enter 'exit' or 'quit' to terminate the program.
 
 Enter a propositional logic statement: P AND Q
 Truth Table:
-P       Q       (P AND Q)
+P       Q       P AND Q
 F       F       F
 T       F       F
 F       T       F
@@ -133,7 +133,7 @@ T       T       T
 
 Enter a propositional logic statement: P OR Q
 Truth Table:
-P       Q       (P OR Q)
+P       Q       P OR Q
 F       F       F
 T       F       T
 F       T       T
@@ -141,7 +141,7 @@ T       T       T
 
 Enter a propositional logic statement: NOT P
 Truth Table:
-P       (NOT P)
+P       NOT P
 F       T
 T       F
 
@@ -159,17 +159,17 @@ NOT (P AND Q)
 
 Run the program:
 ```bash
-$ ./LOGIC.exe input.txt
+$ ./LOGIC.exe sentence.pl
 
 Truth Table:
-P       Q       (P AND Q)
+P       Q       P AND Q
 F       F       F
 T       F       F
 F       T       F
 T       T       T
 
 Truth Table:
-P       Q       R       (P OR (Q AND R))
+P       Q       R       P OR (Q AND R)
 F       F       F       F
 F       F       T       F
 F       T       F       F
@@ -180,7 +180,7 @@ T       T       F       T
 T       T       T       T
 
 Truth Table:
-P       Q       (NOT (P AND Q))
+P       Q       NOT (P AND Q)
 F       F       T
 T       F       T
 F       T       T
