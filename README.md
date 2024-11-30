@@ -66,12 +66,12 @@ Check if the Homebrew package manager was sucessfully installed by entering this
 brew 
 ```
 
-3. Install LLVM using Homebrew:
+3. In the terminal, install LLVM using Homebrew or typing this command:
 ```bash
 brew install llvm
 ```
 
-4. Configure environment variables:
+4. After llvm installation, configure environment variables by entering the following command:
 ```bash
 echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
 echo 'export CC="/opt/homebrew/opt/llvm/bin/clang"' >> ~/.zshrc
@@ -82,19 +82,6 @@ source ~/.zshrc
 5. Compile the program:
 ```bash
 clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
-```
-
-### Linux
-```bash
-cd src
-g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
-# Make the executable runnable (macOS/Linux only)
-chmod +x ./LOGIC #or
-chmod +x LOGIC   #or
-chmod +x .\LOGIC #or
-chmod +x ./LOGIC.exe
-# If the above command fails
-g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ## Usage
