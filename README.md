@@ -41,7 +41,7 @@ cd propositional-logic-interpreter
 ```
 
 ## Building the Program
-**NOTE THAT** You may skip this step if you are using Windows because there is already a build LOGIC.exe when you clone this repository. So you may proceed with the [Usage section](##Usage).
+**NOTE THAT** You may skip this step if you are using Windows because there is already a build LOGIC.exe when you clone this repository. So you may proceed with the [Usage section](#Usage).
 ### Windows
 ```bash
 cd src
