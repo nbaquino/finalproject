@@ -92,6 +92,7 @@ g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
 .\LOGIC.exe
 
 # macOS/Linux
+chmod +x LOGIC.exe
 ./LOGIC
 ```
 
