@@ -188,27 +188,64 @@ T       T       F
 ```
 
 ### Error Handling
-The program includes error handling for:
-- Invalid tokens
-- Syntax errors
-- Unmatched parentheses
-- Invalid variables (any letter other than P or Q)
-- Malformed expressions
+The program includes comprehensive error handling across multiple stages:
 
-Example error messages:
+#### Lexical Errors (Scanner)
+- Invalid characters in expressions
+- Unrecognized tokens/operators
+- Invalid variable names (only P and Q are allowed)
+
+Example:
 ```bash
-Enter a propositional logic statement: A AND B
-Error processing 'A AND B': There is an error at position 0. Invalid token: 'A'
-
-Enter a propositional logic statement: P AND R
-Error processing 'P AND R': There is an error at position 6. Invalid token: 'R'
-
-Enter a propositional logic statement: P AND (Q OR
-Error processing 'P AND (Q OR': There is an error at position 11. Expected ')'
-
-Enter a propositional logic statement: P AND AND Q
-Error processing 'P AND AND Q': There is an error at position 6. Unexpected token: 'AND'
+Error: Invalid character: '$' at position 3
+Error: Invalid token: 'X' at position 0
 ```
+
+#### Syntax Errors (Parser)
+- Missing operands for operators
+- Mismatched parentheses
+- Invalid operator placement
+- Unexpected tokens or expressions
+
+Example:
+```bash
+Error: Binary operator 'AND' must have both left and right operands
+Error: Missing closing parenthesis
+Error: NOT operator can only appear before its operand
+Error: Unexpected tokens after valid expression
+```
+
+#### Evaluation Errors (Evaluator)
+- Invalid expression structures
+- Empty nodes in syntax tree
+- Unknown operators
+
+Example:
+```bash
+Error: Invalid expression: Empty node encountered
+Error: Unknown operator: 'XOR'
+Error: Failed to generate truth table: [specific error message]
+```
+
+#### File Handling Errors
+- File not found
+- File access permission issues
+
+Example:
+```bash
+Error: Could not open input file: input.txt
+```
+
+The program provides detailed error messages that include:
+- The type of error encountered
+- The position in the input where the error occurred (when applicable)
+- A description of what went wrong
+- The specific token or expression causing the error
+
+All errors are caught and handled gracefully, allowing the program to:
+- Continue execution in interactive mode after an error
+- Process subsequent expressions in batch mode
+- Provide clear feedback to help users correct their input
 
 ## Contributing
 - Fork the repository
