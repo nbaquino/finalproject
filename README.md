@@ -61,6 +61,10 @@ cd propositional-logic-interpreter/src
 # Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
+Check if the Homebrew package manager was sucessfully installed by entering this in the terminal
+```
+brew 
+```
 
 3. Install LLVM using Homebrew:
 ```bash
