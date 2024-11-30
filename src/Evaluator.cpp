@@ -7,9 +7,7 @@
  * @brief Constructs an Evaluator with a given syntax tree root
  * @param root Pointer to the root node of the syntax tree
  */
-Evaluator::Evaluator(Node* root) {
-    this->root = root;
-}
+Evaluator::Evaluator(Node* root) : root(root) {}
 
 /**
  * @brief Evaluates a logical expression while tracking intermediate results
@@ -20,36 +18,43 @@ Evaluator::Evaluator(Node* root) {
  */
 bool Evaluator::evaluateWithTracking(Node* node, const std::unordered_map<std::string, bool>& values,
                                      std::unordered_map<std::string, bool>& subResults) {
-    if (node->value == "TRUE") {
-        return true;
-    } else if (node->value == "FALSE") {
-        return false;
-    } else if (values.count(node->value)) {
-        return values.at(node->value);
-    } else if (node->value == "NOT") {
-        bool leftResult = evaluateWithTracking(node->children[0], values, subResults);
-        subResults["NOT " + nodeToString(node->children[0])] = !leftResult;
-        return !leftResult;
-    } else {
-        bool leftResult = evaluateWithTracking(node->children[0], values, subResults);
-        bool rightResult = evaluateWithTracking(node->children[1], values, subResults);
-        bool result = false;
+    if (!node) {
+        throw std::runtime_error("Invalid expression: Empty node encountered");
+    }
 
-        if (node->value == "AND") {
-            result = leftResult && rightResult;
-        } else if (node->value == "OR") {
-            result = leftResult || rightResult;
-        } else if (node->value == "IMPLIES") {
-            result = !leftResult || rightResult;
-        } else if (node->value == "EQUIVALENT") {
-            result = leftResult == rightResult;
-        }
+    // Handle constants and variables
+    if (node->value == "TRUE") return true;
+    if (node->value == "FALSE") return false;
+    if (values.count(node->value)) return values.at(node->value);
 
-        std::string expression =
-            "(" + nodeToString(node->children[0]) + " " + node->value + " " + nodeToString(node->children[1]) + ")";
-        subResults[expression] = result;
+    // Get result first
+    bool result;
+
+    // Handle NOT operator
+    if (node->value == "NOT") {
+        result = !evaluateWithTracking(node->children[0], values, subResults);
+        std::string expr = "NOT " + nodeToString(node->children[0]);
+        subResults[expr] = result;
         return result;
     }
+
+    // Handle binary operators
+    bool leftResult = evaluateWithTracking(node->children[0], values, subResults);
+    bool rightResult = evaluateWithTracking(node->children[1], values, subResults);
+
+    if (node->value == "AND") result = leftResult && rightResult;
+    else if (node->value == "OR") result = leftResult || rightResult;
+    else if (node->value == "IMPLIES") result = !leftResult || rightResult;
+    else if (node->value == "EQUIVALENT") result = leftResult == rightResult;
+    else throw std::runtime_error("Unknown operator: '" + node->value + "'");
+
+    // Store the result with proper formatting
+    std::string expr = nodeToString(node);
+    if (!subResults.count(expr)) {
+        subResults[expr] = result;
+    }
+
+    return result;
 }
 
 /**
@@ -80,49 +85,54 @@ std::set<std::string> Evaluator::collectVariables(Node* node) {
 std::pair<std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>>,
           std::vector<std::string>>
 Evaluator::generateTruthTable() {
-    std::set<std::string> variableSet = collectVariables(root);
-    std::vector<std::string> variables(variableSet.begin(), variableSet.end());
+    try {
+        std::set<std::string> variableSet = collectVariables(root);
+        std::vector<std::string> variables(variableSet.begin(), variableSet.end());
+        std::string fullExpression = nodeToString(root);
 
-    std::vector<std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, bool>>> table;
-    std::set<std::string> allSubResults;
+        // Generate truth table
+        std::vector<std::pair<std::unordered_map<std::string, bool>,
+                             std::unordered_map<std::string, bool>>> table;
+        std::vector<std::string> subExpressions;
 
-    std::string fullExpression = nodeToString(root);
+        // Generate first row to get all subexpressions
+        std::unordered_map<std::string, bool> firstValues;
+        for (const auto& var : variables) {
+            firstValues[var] = false;
+        }
+        std::unordered_map<std::string, bool> firstResults;
+        evaluateWithTracking(root, firstValues, firstResults);
 
-    size_t numCombinations = std::pow(2, variables.size());
-    for (size_t i = 0; i < numCombinations; ++i) {
-        std::unordered_map<std::string, bool> values;
-        for (size_t j = 0; j < variables.size(); ++j) {
-            values[variables[j]] = (i & (1 << j)) != 0;
+        // Collect unique subexpressions in order
+        for (const auto& [expr, _] : firstResults) {
+            if (expr != fullExpression &&
+                std::find(variables.begin(), variables.end(), expr) == variables.end()) {
+                subExpressions.push_back(expr);
+            }
         }
 
-        std::unordered_map<std::string, bool> subResults;
-        bool result = evaluateWithTracking(root, values, subResults);
-        subResults[fullExpression] = result;
+        // Generate all combinations
+        size_t numCombinations = std::pow(2, variables.size());
+        for (size_t i = 0; i < numCombinations; ++i) {
+            std::unordered_map<std::string, bool> values;
+            for (size_t j = 0; j < variables.size(); ++j) {
+                values[variables[j]] = (i & (1 << j)) != 0;
+            }
 
-        table.emplace_back(values, subResults);
-        for (const auto& [key, _] : subResults) {
-            allSubResults.insert(key);
+            std::unordered_map<std::string, bool> subResults;
+            evaluateWithTracking(root, values, subResults);
+            table.emplace_back(values, subResults);
         }
+
+        // Prepare final column order
+        std::vector<std::string> finalColumns = variables;
+        finalColumns.insert(finalColumns.end(), subExpressions.begin(), subExpressions.end());
+        finalColumns.push_back(fullExpression);
+
+        return {table, finalColumns};
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Failed to generate truth table: " + std::string(e.what()));
     }
-
-    std::vector<std::string> intermediateColumns;
-    for (const auto& col : allSubResults) {
-        if (col != fullExpression) {
-            intermediateColumns.push_back(col);
-        }
-    }
-
-    // Sort intermediate columns by complexity (nesting depth, then length)
-    std::sort(intermediateColumns.begin(), intermediateColumns.end(), [](const std::string& a, const std::string& b) {
-        return std::make_pair(std::count(a.begin(), a.end(), '('), a.size()) <
-               std::make_pair(std::count(b.begin(), b.end(), '('), b.size());
-    });
-
-    std::vector<std::string> finalColumns = variables;
-    finalColumns.insert(finalColumns.end(), intermediateColumns.begin(), intermediateColumns.end());
-    finalColumns.push_back(fullExpression);
-
-    return {table, finalColumns};
 }
 
 /**
@@ -142,7 +152,20 @@ std::string Evaluator::nodeToString(Node* node) {
     }
 
     if (node->children.size() == 2) {
-        return "(" + nodeToString(node->children[0]) + " " + node->value + " " + nodeToString(node->children[1]) + ")";
+        // Add parentheses for compound expressions
+        std::string left = nodeToString(node->children[0]);
+        std::string right = nodeToString(node->children[1]);
+
+        // Add parentheses if the child is a compound expression
+        if (node->children[0]->children.size() == 2) {
+            left = "(" + left + ")";
+        }
+        if (node->children[1]->children.size() == 2 ||
+            (node->children[1]->value == "NOT" && node->children[1]->children.size() == 1)) {
+            right = "(" + right + ")";
+        }
+
+        return left + " " + node->value + " " + right;
     }
 
     return node->value;

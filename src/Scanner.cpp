@@ -31,44 +31,40 @@ void Scanner::tokenize() {
     size_t current = 0;
 
     while (current < input_string.length()) {
+        char c = input_string[current];
+
         // Skip whitespace
-        if (std::isspace(input_string[current])) {
-            if (input_string[current] == '\n') line++;
+        if (std::isspace(c)) {
+            if (c == '\n') line++;
             current++;
             continue;
         }
 
         // Handle parentheses
-        if (input_string[current] == '(' || input_string[current] == ')') {
-            std::string lexeme(1, input_string[current]);
-            tokens.push_back(createToken(getTokenType(lexeme), lexeme, line));
+        if (c == '(' || c == ')') {
+            tokens.push_back(createToken(getTokenType(std::string(1, c)), std::string(1, c), line));
             current++;
             continue;
         }
 
         // Handle identifiers and keywords
-        if (std::isalpha(input_string[current])) {
-            size_t start = current;
+        if (std::isalpha(c)) {
+            std::string lexeme;
             while (current < input_string.length() && std::isalpha(input_string[current])) {
+                lexeme += input_string[current];
                 current++;
             }
-            std::string lexeme = input_string.substr(start, current - start);
-            TokenType type = getTokenType(lexeme);
 
+            TokenType type = getTokenType(lexeme);
             if (type == TokenType::UNKNOWN) {
-                throw std::invalid_argument("There is an error at position " +
-                                          std::to_string(start) +
-                                          ". Invalid token: '" + lexeme + "'");
+                throw std::invalid_argument("Invalid token: '" + lexeme + "' at position " + std::to_string(current));
             }
 
             tokens.push_back(createToken(type, lexeme, line));
             continue;
         }
 
-        // If we get here, we've encountered an invalid character
-        throw std::invalid_argument("There is an error at position " +
-                                  std::to_string(current) +
-                                  ". Invalid character: '" + std::string(1, input_string[current]) + "'");
+        throw std::invalid_argument("Invalid character: '" + std::string(1, c) + "' at position " + std::to_string(current));
     }
 }
 
@@ -113,4 +109,12 @@ TokenType Scanner::getTokenType(const std::string& lexeme) {
     }
 
     return TokenType::UNKNOWN;
+}
+
+std::string Scanner::getTokensAsString() const {
+    std::string result;
+    for (const auto& token : tokens) {
+        result += token.toString() + " ";
+    }
+    return result;
 }

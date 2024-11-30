@@ -4,13 +4,9 @@
 #include "../include/Parser.h"
 #include "../include/Evaluator.h"
 #include <fstream>
+#include <iomanip>
 
-/**
- * @brief Reads and filters lines from an input file
- * @param filename Path to the input file
- * @return Vector of non-empty, non-comment lines
- * @throws std::runtime_error if file cannot be opened
- */
+
 static std::vector<std::string> read_input_file(const std::string& filename) {
     std::vector<std::string> lines;
     std::ifstream file(filename);
@@ -31,69 +27,66 @@ static std::vector<std::string> read_input_file(const std::string& filename) {
     return lines;
 }
 
-/**
- * @brief Processes a single logical expression
- * @param input_string The logical expression to evaluate
- *
- * Steps:
- * 1. Tokenizes the input
- * 2. Builds parse tree
- * 3. Generates and displays truth table
- */
+// Add this function to process a single expression
 static void process_expression(const std::string& input_string) {
     try {
         // Step 1: Tokenize the input string
         Scanner scanner(input_string);
         std::vector<Token> tokens = scanner.getTokens();
 
-
         // Step 2: Parse the tokens into a parse tree
         Parser parser(tokens);
         Node* parse_tree = parser.parseSentence();
-
 
         // Step 3 & 4: Generate and print truth table
         Evaluator evaluator(parse_tree);
         auto [table, finalColumns] = evaluator.generateTruthTable();
 
-        std::cout << "Truth Table: \n";
-        // Print header
-        for (const auto& col : finalColumns) {
-            std::cout << col << "\t";
-        }
-        std::cout << std::endl;
+        std::cout << "Truth Table:\n";
 
-        // Print rows
+        // Calculate column widths
+        std::vector<size_t> columnWidths;
+        for (const auto& col : finalColumns) {
+            columnWidths.push_back(std::max(col.length(), size_t(5)) + 2); // minimum width of 5 plus padding
+        }
+
+        // Print header with proper alignment
+        for (size_t i = 0; i < finalColumns.size(); ++i) {
+            std::cout << std::left << std::setw(columnWidths[i]) << finalColumns[i] << "|";
+        }
+        std::cout << "\n";
+
+        // Print separator line
+        for (const auto& width : columnWidths) {
+            std::cout << std::string(width, '-') << "+";
+        }
+        std::cout << "\n";
+
+        // Print rows with proper alignment
         for (const auto& row : table) {
             const auto& values = row.first;
             const auto& results = row.second;
-            for (const auto& var : finalColumns) {
-                if (values.find(var) != values.end()) {
-                    std::cout << (values.at(var) ? "T" : "F") << "\t";
+
+            for (size_t i = 0; i < finalColumns.size(); ++i) {
+                const auto& col = finalColumns[i];
+                bool value;
+                if (values.find(col) != values.end()) {
+                    value = values.at(col);
                 } else {
-                    std::cout << (results.at(var) ? "T" : "F") << "\t";
+                    value = results.at(col);
                 }
+                std::cout << std::left << std::setw(columnWidths[i]) << (value ? "T" : "F") << "|";
             }
-            std::cout << std::endl;
+            std::cout << "\n";
         }
 
         // Clean up parse tree
         delete parse_tree;
     } catch (const std::exception& e) {
-        std::cout << "Error processing '" << input_string << "': " << e.what() << std::endl;
+        std::cout << "Error: " << e.what() << std::endl;
     }
 }
 
-/**
- * @brief Main entry point of the Propositional Logic Evaluator
- * @param argc Number of command-line arguments
- * @param argv Array of command-line arguments
- * @return 0 on success, 1 on error
- *
- * Supports two modes:
- * 1. File input mode: ./program input_file
- * 2. Interactive mode: ./program
- */
 int main(int argc, char* argv[]) {
     if (argc > 2) {
         std::cout << "Usage: " << argv[0] << " [input_file]" << std::endl;

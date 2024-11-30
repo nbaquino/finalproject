@@ -35,6 +35,8 @@ public:
      */
     std::vector<Token> getTokens() const;
 
+    std::string getTokensAsString() const;
+
 private:
     std::string input_string;                 // The original input string
     std::vector<Token> tokens;                // List of tokens extracted from the input string

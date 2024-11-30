@@ -54,6 +54,10 @@ public:
             default: return "UNDEFINED";
         }
     }
+
+    std::string toString() const {
+        return lexeme;  // Simply return the lexeme as the string representation
+    }
 };
 
 #endif // TOKEN_H

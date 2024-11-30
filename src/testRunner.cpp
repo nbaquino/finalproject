@@ -4,6 +4,7 @@
 #include "../include/Parser.h"
 #include "../include/Evaluator.h"
 #include <fstream>
+#include <iomanip>
 
 
 static std::vector<std::string> read_input_file(const std::string& filename) {
@@ -32,15 +33,15 @@ static void process_expression(const std::string& input_string) {
         // Step 1: Tokenize the input string
         Scanner scanner(input_string);
         std::vector<Token> tokens = scanner.getTokens();
-        std::cout << "Scanned Tokens: ";
-        for (const auto& token : tokens) {
-            std::cout << token.lexeme << " ";
-        }
-        std::cout << std::endl;
+
+        // Print scanned tokens
+        std::cout << "Scanned Tokens: " << scanner.getTokensAsString() << std::endl;
 
         // Step 2: Parse the tokens into a parse tree
         Parser parser(tokens);
         Node* parse_tree = parser.parseSentence();
+
+        // Only continue if parsing was successful
         std::cout << "Parse Tree Structure: " << std::endl;
         print_tree(parse_tree);
 
@@ -48,31 +49,48 @@ static void process_expression(const std::string& input_string) {
         Evaluator evaluator(parse_tree);
         auto [table, finalColumns] = evaluator.generateTruthTable();
 
-        std::cout << "Truth Table: \n";
-        // Print header
-        for (const auto& col : finalColumns) {
-            std::cout << col << "\t";
-        }
-        std::cout << std::endl;
+        std::cout << "Truth Table:\n";
 
-        // Print rows
+        // Calculate column widths
+        std::vector<size_t> columnWidths;
+        for (const auto& col : finalColumns) {
+            columnWidths.push_back(std::max(col.length(), size_t(5)) + 2); // minimum width of 5 plus padding
+        }
+
+        // Print header with proper alignment
+        for (size_t i = 0; i < finalColumns.size(); ++i) {
+            std::cout << std::left << std::setw(columnWidths[i]) << finalColumns[i] << "|";
+        }
+        std::cout << "\n";
+
+        // Print separator line
+        for (const auto& width : columnWidths) {
+            std::cout << std::string(width, '-') << "+";
+        }
+        std::cout << "\n";
+
+        // Print rows with proper alignment
         for (const auto& row : table) {
             const auto& values = row.first;
             const auto& results = row.second;
-            for (const auto& var : finalColumns) {
-                if (values.find(var) != values.end()) {
-                    std::cout << (values.at(var) ? "T" : "F") << "\t";
+
+            for (size_t i = 0; i < finalColumns.size(); ++i) {
+                const auto& col = finalColumns[i];
+                bool value;
+                if (values.find(col) != values.end()) {
+                    value = values.at(col);
                 } else {
-                    std::cout << (results.at(var) ? "T" : "F") << "\t";
+                    value = results.at(col);
                 }
+                std::cout << std::left << std::setw(columnWidths[i]) << (value ? "T" : "F") << "|";
             }
-            std::cout << std::endl;
+            std::cout << "\n";
         }
 
         // Clean up parse tree
         delete parse_tree;
     } catch (const std::exception& e) {
-        std::cout << "Error processing '" << input_string << "': " << e.what() << std::endl;
+        std::cout << "Error: " << e.what() << std::endl;
     }
 }
 
