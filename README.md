@@ -52,7 +52,6 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 
 1. Navigate to the source directory:
 ```bash
-<<<<<<< HEAD
 cd propositional-logic-interpreter/src
 ```
 
