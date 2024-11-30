@@ -29,7 +29,7 @@ The evaluator uses a multi-stage processing pipeline:
 
 To check gcc installation:
 ```bash
-gcc -version
+gcc --version
 ```
 
 ## Installation
@@ -41,7 +41,7 @@ cd propositional-logic-interpreter
 ```
 
 ## Building the Program
-Skip this step if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
+**NOTE THAT** You may skip this step if you are using Windows because there is already a build LOGIC.exe when you clone this repository. So you may proceed with the [Usage section](#Usage).
 ### Windows
 ```bash
 cd src
@@ -57,15 +57,23 @@ cd propositional-logic-interpreter/src
 
 2. Install Homebrew (skip if already installed):
 ```bash
+<<<<<<< HEAD
+=======
+# Install Homebrew if not already installed
+>>>>>>> 88dd5e7098a0c6952358d464dbdd02bb970bfbb7
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
+Check if the Homebrew package manager was sucessfully installed by entering this in the terminal
+```
+brew 
+```
 
-3. Install LLVM using Homebrew:
+3. In the terminal, install LLVM using Homebrew or typing this command:
 ```bash
 brew install llvm
 ```
 
-4. Configure environment variables:
+4. After llvm installation, configure environment variables by entering the following command:
 ```bash
 echo 'export PATH="/opt/homebrew/opt/llvm/bin:$PATH"' >> ~/.zshrc
 echo 'export CC="/opt/homebrew/opt/llvm/bin/clang"' >> ~/.zshrc
@@ -76,28 +84,6 @@ source ~/.zshrc
 5. Compile the program:
 ```bash
 clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
-```
-
-6. Run the program:
-```bash
-# With input file
-./LOGIC sentence.pl
-
-# Or in interactive mode
-./LOGIC
-```
-
-### Linux
-```bash
-cd src
-g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
-# Make the executable runnable (macOS/Linux only)
-chmod +x ./LOGIC #or
-chmod +x LOGIC   #or
-chmod +x .\LOGIC #or
-chmod +x ./LOGIC.exe
-# If the above command fails
-g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ## Usage
