@@ -29,7 +29,7 @@ The evaluator uses a multi-stage processing pipeline:
 
 To check gcc installation:
 ```bash
-gcc -version
+gcc --version
 ```
 
 ## Installation
