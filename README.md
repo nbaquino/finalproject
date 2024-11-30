@@ -50,7 +50,6 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 
 ### macOS
 ```bash
-cd propositional-logic-interpreter/src
 # Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # Install LLVM
@@ -62,10 +61,6 @@ echo 'export CXX="/opt/homebrew/opt/llvm/bin/clang++"' >> ~/.zshrc
 source ~/.zshrc
 # Compile the program
 clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
-# Run the program (with input file)
-./LOGIC sentence.pl
-# Or run in interactive mode
-./LOGIC
 ```
 
 ### Linux
@@ -89,7 +84,6 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 .\LOGIC.exe
 
 # macOS/Linux
-chmod +x LOGIC.exe
 ./LOGIC
 ```
 
@@ -116,7 +110,7 @@ chmod +x LOGIC.exe
 
 ### Interactive Mode
 ```bash
-$ ./LOGIC
+$ ./LOGIC or ./LOGIC.exe
 Enter a propositional logic statement: P AND Q
 Truth Table:
 P       Q       P AND Q
