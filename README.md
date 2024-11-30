@@ -78,13 +78,7 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```bash
 cd src
 g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
-# Make the executable runnable (macOS/Linux only)
-chmod +x ./LOGIC #or
-chmod +x LOGIC   #or
-chmod +x .\LOGIC #or
-chmod +x ./LOGIC.exe
 # If the above command fails
-g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ## Usage
@@ -95,6 +89,11 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 .\LOGIC.exe
 
 # macOS/Linux
+# Make the executable runnable (macOS/Linux only)
+chmod +x ./LOGIC #or
+chmod +x LOGIC   #or
+chmod +x .\LOGIC #or
+chmod +x ./LOGIC.exe
 chmod +x LOGIC.exe
 ./LOGIC
 ```
