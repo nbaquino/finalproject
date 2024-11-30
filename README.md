@@ -52,11 +52,15 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 
 1. Navigate to the source directory:
 ```bash
+<<<<<<< HEAD
 cd propositional-logic-interpreter/src
 ```
 
 2. Install Homebrew (skip if already installed):
 ```bash
+=======
+# Install Homebrew if not already installed
+>>>>>>> 58bcf7235ca8c42ac0a6d863dc6ba66558403692
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
@@ -108,7 +112,6 @@ g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 .\LOGIC.exe
 
 # macOS/Linux
-chmod +x LOGIC.exe
 ./LOGIC
 ```
 
@@ -135,7 +138,7 @@ chmod +x LOGIC.exe
 
 ### Interactive Mode
 ```bash
-$ ./LOGIC
+$ ./LOGIC or ./LOGIC.exe
 Enter a propositional logic statement: P AND Q
 Truth Table:
 P       Q       P AND Q
