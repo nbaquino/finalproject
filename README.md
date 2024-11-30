@@ -95,10 +95,10 @@ g++ -o LOGIC Logic.cpp Scanner.cpp Parser.cpp Evaluator.cpp
 ### File Input Mode
 ```bash
 # Windows
-.\LOGIC.exe input_file.txt
+.\LOGIC.exe sentence.pl
 
 # macOS/Linux
-./LOGIC input_file.txt
+./LOGIC sentence.pl
 ```
 
 ### Input Format
@@ -159,7 +159,7 @@ NOT (P AND Q)
 
 Run the program:
 ```bash
-$ ./LOGIC.exe input.txt
+$ ./LOGIC.exe sentence.pl
 
 Truth Table:
 P       Q       P AND Q
