@@ -40,6 +40,8 @@ git clone https://github.com/nbaquino/propositional-logic-interpreter.git
 cd propositional-logic-interpreter
 ```
 
+## Building the Program
+Skip this step if you want because there is already a build LOGIC.exe when you clone this repo. So you may proceed with the Usage section.
 ### Windows
 ```bash
 cd src
@@ -70,7 +72,13 @@ clang++ -o LOGIC Main.cpp Scanner.cpp Parser.cpp Evaluator.cpp
 ```bash
 cd src
 g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
-chmod +x LOGIC
+# Make the executable runnable (macOS/Linux only)
+chmod +x ./LOGIC #or
+chmod +x LOGIC   #or
+chmod +x .\LOGIC #or
+chmod +x ./LOGIC.exe
+# If the above command fails
+g++ -o LOGIC .\Main.cpp .\Scanner.cpp .\Parser.cpp .\Evaluator.cpp
 ```
 
 ## Usage
@@ -81,6 +89,7 @@ chmod +x LOGIC
 .\LOGIC.exe
 
 # macOS/Linux
+chmod +x LOGIC.exe
 ./LOGIC
 ```
 
@@ -117,6 +126,45 @@ F       T       F
 T       T       T
 
 Enter a propositional logic statement: exit
+```
+
+### File Input Mode
+Create a file named `input.txt` with the following content:
+```text
+# Sample expressions
+P AND Q
+P OR (Q AND R)
+NOT (P AND Q)
+```
+
+Run the program:
+```bash
+$ ./LOGIC.exe sentence.pl
+
+Truth Table:
+P       Q       P AND Q
+F       F       F
+T       F       F
+F       T       F
+T       T       T
+
+Truth Table:
+P       Q       R       P OR (Q AND R)
+F       F       F       F
+F       F       T       F
+F       T       F       F
+F       T       T       T
+T       F       F       T
+T       F       T       T
+T       T       F       T
+T       T       T       T
+
+Truth Table:
+P       Q       NOT (P AND Q)
+F       F       T
+T       F       T
+F       T       T
+T       T       F
 ```
 
 ### Error Handling
